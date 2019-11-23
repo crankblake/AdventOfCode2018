@@ -50,11 +50,7 @@ foreach ($item in $arrayDay){
     
     if ($1DayArray[0] -match 'Guard')
     {
-        #Write-Host "Found guard in today's array"
-        #$arrayTotal -match $1DayArray[0]
-        #$1DayArray[0] -match $arrayDay
         $guardIndex = $arrayTotal.IndexOf($1DayArray[0])
-        #$guard = $arrayAction[$guardIndex].Substring(7,5)
         if ($arrayAction[$guardIndex] -match "Guard #\d\d\d\d"){
             $guard = $arrayAction[$guardIndex].Substring(7,5)
         }else{
@@ -77,7 +73,6 @@ foreach ($item in $arrayDay){
             $previousDayArray
             $1DayArray
         }
-
     #Write-Host "Day $($item) with Guard $($guard)"
     $minSleep = $null
     $minFallArray = @()
@@ -101,16 +96,6 @@ foreach ($item in $arrayDay){
             $minSleep +=  $minWakeArray[$indexFall] - $calcFall
         }
     }
-    #Guard grab here
-    <#
-    $1DayArrayGuard = $arrayTotal | Select-String -SimpleMatch $1DayArray -Context 1,0
-    $guard = $1DayArrayGuard | Select-String -SimpleMatch "Guard"
-    Write-Host $guard
-    if ($guard.Count -gt 1){
-        #how do i find the right one?
-        $guard = $guard[0]
-    }#>
-    #Write-Host $guard
     if ($minSleep){
         $Objects += @([PSCustomObject]@{
             Date = $item
@@ -129,4 +114,18 @@ foreach ($item in $arrayDay){
         })
     }
 }
+#Calculate which Guard has slept the most
+$uniqueGuards = $Objects.Guard | Sort-Object -Unique
+$totalSleep = @()
 
+foreach ($guard in $uniqueGuards){
+    $match = $Objects -match $guard
+    $totalSleep += $match.Time | Measure-Object -Sum
+    Write-Host "Total sleep for $($guard) is $(($match.Time | Measure-Object -Sum).Sum)"
+}
+($totalSleep.Sum).Count
+$max = (($totalSleep.Sum) | Measure-Object -Maximum).Maximum
+$maxSleepIndex = $totalSleep.Sum.IndexOf($max)
+Write-Host "Guard $($uniqueGuards[$maxSleepIndex])has slept the most with $($max) minutes" -ForegroundColor Green
+
+#TODO: calculate which minute he was most likely asleep
