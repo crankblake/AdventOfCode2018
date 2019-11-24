@@ -20,10 +20,11 @@ foreach ($item in $arrayTotal){
 }
 
 #$arrayGuard = ($arrayAction -match "Guard #\d\d\d\d").Substring(7,5)
+<#
 $arrayGuard = ($arrayAction -match "Guard #\d{3,4}").Substring(7,5)
 foreach ($item in $arrayTotal){
     if ($item -match )
-}
+}#>
 
 
 if ($arrayAction[$guardIndex] -match "Guard #\d\d\d\d"){
@@ -37,7 +38,8 @@ if ($arrayAction[$guardIndex] -match "Guard #\d\d\d\d"){
 #creates a custom object with an entry every day
 
 foreach ($item in $arrayDay){
-    #$item = '02-26'
+    $item = '03-04'
+    $Minutes = [bool[]]::new(60)
     $itemIndex = $arrayDay.IndexOf($item)
     $previousItem = $arrayDay[$itemIndex - 1]
     
@@ -100,6 +102,7 @@ foreach ($item in $arrayDay){
         $Objects += @([PSCustomObject]@{
             Date = $item
             Guard = $guard
+            Minutes = [bool[]]::new(60)  
             #Time = $arrayTime.IndexOf($TimeSpaces[0])
             #Time = ($arrayTime -match $item).IndexOf($arrayTime -match $item)
             Time = $minSleep
@@ -108,6 +111,7 @@ foreach ($item in $arrayDay){
         $Objects += @([PSCustomObject]@{
             Date = $item
             Guard = $guard
+            Minutes = [bool[]]::new(60)  
             #Time = $arrayTime.IndexOf($TimeSpaces[0])
             #Time = ($arrayTime -match $item).IndexOf($arrayTime -match $item)
             Time = 0    
@@ -127,5 +131,26 @@ foreach ($guard in $uniqueGuards){
 $max = (($totalSleep.Sum) | Measure-Object -Maximum).Maximum
 $maxSleepIndex = $totalSleep.Sum.IndexOf($max)
 Write-Host "Guard $($uniqueGuards[$maxSleepIndex])has slept the most with $($max) minutes" -ForegroundColor Green
-
+$sleepiestGuardObject = $Objects -match $uniqueGuards[$maxSleepIndex]
 #TODO: calculate which minute he was most likely asleep
+#$minutesArray = [bool[]]::new(60)
+#$minutesArray.length
+<#
+$i = 0
+foreach ($element in $minutesArray){
+    Write-Host $i
+    Write-Host $minutesArray.IndexOf($element)
+    $minutesArray[$i] = $true
+    $i++
+}
+$minutesArray[40] = $true
+$minutesArray[0] = $false
+#>
+<#
+foreach($item in $sleepiestGuardObject.Date)
+{
+    $minutesObject += @([PSCustomObject]@{
+    Date = $item
+    Minutes = [bool[]]::new(60)   
+    })
+}#>
