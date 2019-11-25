@@ -6,7 +6,6 @@ if (Test-Path 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\Input
     Set-Location 'E:\GameDevStuff\AdventOfCode2018\Inputs'
 }
 #>
-dir
 $arrayTotal = Get-Content .\inputday4.txt | Sort-Object
 #$test.Substring(6,11) | Sort-Object 
 $arrayTime = $arrayTotal.Substring(6,11)
