@@ -1,10 +1,12 @@
+<#
 if (Test-Path 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\Inputs')
 {
     Set-Location 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\Inputs'
 }else{
     Set-Location 'E:\GameDevStuff\AdventOfCode2018\Inputs'
 }
-
+#>
+dir
 $arrayTotal = Get-Content .\inputday4.txt | Sort-Object
 #$test.Substring(6,11) | Sort-Object 
 $arrayTime = $arrayTotal.Substring(6,11)
@@ -36,10 +38,10 @@ if ($arrayAction[$guardIndex] -match "Guard #\d\d\d\d"){
 #TODO: Create a custom object to store Guards and total time asleep
 
 #creates a custom object with an entry every day
-
+$Objects = $null
 foreach ($item in $arrayDay){
-    $item = '03-04'
-    $Minutes = [bool[]]::new(60)
+    #$item = '03-04'
+    $minutes = [bool[]]::new(60)
     $itemIndex = $arrayDay.IndexOf($item)
     $previousItem = $arrayDay[$itemIndex - 1]
     
@@ -96,13 +98,16 @@ foreach ($item in $arrayDay){
         foreach($calcFall in $minFallArray){
             $indexFall = $minFallArray.IndexOf($calcFall)
             $minSleep +=  $minWakeArray[$indexFall] - $calcFall
+            for ($i = [int]$calcFall; $i -lt $minWakeArray[$indexFall]; $i++){
+                $minutes[$i] = $true
+            }
         }
     }
     if ($minSleep){
         $Objects += @([PSCustomObject]@{
             Date = $item
             Guard = $guard
-            Minutes = [bool[]]::new(60)  
+            Minutes = $minutes
             #Time = $arrayTime.IndexOf($TimeSpaces[0])
             #Time = ($arrayTime -match $item).IndexOf($arrayTime -match $item)
             Time = $minSleep
@@ -111,7 +116,7 @@ foreach ($item in $arrayDay){
         $Objects += @([PSCustomObject]@{
             Date = $item
             Guard = $guard
-            Minutes = [bool[]]::new(60)  
+            Minutes = $minutes
             #Time = $arrayTime.IndexOf($TimeSpaces[0])
             #Time = ($arrayTime -match $item).IndexOf($arrayTime -match $item)
             Time = 0    
