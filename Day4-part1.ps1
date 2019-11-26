@@ -1,10 +1,3 @@
-
-if (Test-Path 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\')
-{
-    Set-Location 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\'
-}else{
-    Set-Location 'E:\GameDevStuff\AdventOfCode2018\'
-}
 $arrayTotal = Get-Content .\Inputs\inputday4.txt | Sort-Object
 $arrayTime = $arrayTotal.Substring(6,11)
 $arrayDay = $arrayTotal.Substring(6,5) | Select-Object -Unique
@@ -40,7 +33,6 @@ foreach ($item in $arrayDay){
         }
     }elseif($previousDayArray[$previousDayLastIndex] -match 'Guard')
         {
-            #Write-Host "Found guard in yesterday's array
             $guardIndex = $arrayTotal.IndexOf($previousDayArray[$previousDayLastIndex])
             if ($arrayAction[$guardIndex] -match "Guard #\d\d\d\d"){
                 $guard = $arrayAction[$guardIndex].Substring(7,5)
@@ -48,26 +40,21 @@ foreach ($item in $arrayDay){
                 $guard = $arrayAction[$guardIndex].Substring(7,3)
             }
         }else{
-            #Write-Error "Can't find guard for $($item)"
             $previousDayArray
             $1DayArray
         }
-    #Write-Host "Day $($item) with Guard $($guard)"
     $minSleep = $null
     $minFallArray = @()
     $minWakeArray = @()
     if ($1DayArrayFall){
         foreach ($fall in $1DayArrayFall){
-            #$fall
             $indexFall = $arrayTotal.IndexOf($fall)
             $minFall = ($arrayTime[$indexFall]).Substring(9,2)
             $minFallArray += $minFall
         }
         foreach($wake in $1DayArrayWake){
-            #$wake
             $indexWake = $arrayTotal.IndexOf($wake)
             $minWake = ($arrayTime[$indexWake]).Substring(9,2)
-            #$minSleep += $minWake - $minFall
             $minWakeArray += $minWake
         }
         foreach($calcFall in $minFallArray){
@@ -101,7 +88,6 @@ $totalSleep = @()
 foreach ($guard in $uniqueGuards){
     $match = $Objects -match $guard
     $totalSleep += $match.Time | Measure-Object -Sum
-    #Write-Host "Total sleep for $($guard) is $(($match.Time | Measure-Object -Sum).Sum)"
 }
 $max = (($totalSleep.Sum) | Measure-Object -Maximum).Maximum
 $maxSleepIndex = $totalSleep.Sum.IndexOf($max)
@@ -118,7 +104,6 @@ foreach ($guardItem in $sleepiestGuardObject){
             $finalArray[$c]++
         }
     }
-    
 }
 $maxMinute = (($finalArray) | Measure-Object -Maximum).Maximum
 $maxMinuteIndex = $finalArray.IndexOf([int]$maxMinute)
