@@ -6,7 +6,7 @@ if (Test-Path 'E:\Libraries\Documents\Scripting Projects\AdventOfCode\2018\Input
     Set-Location 'E:\GameDevStuff\AdventOfCode2018\Inputs'
 }
 #>
-$arrayTotal = Get-Content .\inputday4.txt | Sort-Object
+$arrayTotal = Get-Content .\Inputs\inputday4.txt | Sort-Object
 #$test.Substring(6,11) | Sort-Object 
 $arrayTime = $arrayTotal.Substring(6,11)
 $arrayDay = $arrayTotal.Substring(6,5) | Select-Object -Unique
@@ -129,9 +129,9 @@ $totalSleep = @()
 foreach ($guard in $uniqueGuards){
     $match = $Objects -match $guard
     $totalSleep += $match.Time | Measure-Object -Sum
-    Write-Host "Total sleep for $($guard) is $(($match.Time | Measure-Object -Sum).Sum)"
+    #Write-Host "Total sleep for $($guard) is $(($match.Time | Measure-Object -Sum).Sum)"
 }
-($totalSleep.Sum).Count
+#($totalSleep.Sum).Count
 $max = (($totalSleep.Sum) | Measure-Object -Maximum).Maximum
 $maxSleepIndex = $totalSleep.Sum.IndexOf($max)
 Write-Host "Guard $($uniqueGuards[$maxSleepIndex])has slept the most with $($max) minutes" -ForegroundColor Green
@@ -158,3 +158,20 @@ foreach($item in $sleepiestGuardObject.Date)
     Minutes = [bool[]]::new(60)   
     })
 }#>
+$finalArray = $null
+$finalArray = [int[]]::new(60)
+#$sleepiestGuardObject.Count
+foreach ($guardItem in $sleepiestGuardObject){
+#$guardItem
+    for ($c = 0; $c -lt $guardItem.Minutes.Length; $c++){
+        if ($guardItem.Minutes[$c]){
+            $finalArray[$c]++
+        }
+    }
+    
+}
+$maxMinute = (($finalArray) | Measure-Object -Maximum).Maximum
+$maxMinuteIndex = $finalArray.IndexOf([int]$maxMinute)
+$results = [int]$uniqueGuards[$maxSleepIndex] * [int]$maxMinuteIndex 
+Write-Host "$($uniqueGuards[$maxSleepIndex])times $($maxMinuteIndex) = $($results)"  -ForegroundColor Green
+
